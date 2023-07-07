@@ -1,0 +1,15 @@
+{
+    "llvm-target": "i386-unknown-none",
+    "target-pointer-width": "32",
+    "arch": "x86",
+    "cpu": "i386",
+    "code-model": "kernel",
+    "data-layout": "e-S128-p:32:32-n32",
+    "features": "-mmx,-sse",
+    "panic-strategy": "abort",
+    "linker": "rust-lld",
+    "linker-flavor": "ld.lld",
+    "post-link-args": {
+        "ld.lld": ["link.x"]
+    }
+}

@@ -1,0 +1,6 @@
+cargo b -r --target i386-kernel.json -Z build-std=core,alloc
+objcopy target/i386-kernel/release/stage1 stage1.bin -O binary
+cd ..
+./iso
+./run
+cd stage1

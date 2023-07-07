@@ -1,0 +1,5 @@
+./compile
+cd ..
+./iso
+./run
+cd stage2
