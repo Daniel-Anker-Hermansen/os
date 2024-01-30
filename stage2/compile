@@ -1,2 +1,0 @@
-cargo build -Z build-std=core --target i686-unknown-none.json --release
-objcopy target/i686-unknown-none/release/stage2 ../stage2.bin -O binary

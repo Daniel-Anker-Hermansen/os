@@ -1,5 +1,8 @@
-nasm stage0.s -f bin -o stage0.bin
-#nasm stage1.s -f bin -o stage1.bin
-dd if=/dev/zero of=boot.iso bs=512 count=2880
-dd if=stage0.bin of=boot.iso conv=notrunc bs=512 count=1
-dd if=stage1/stage1.bin of=boot.iso conv=notrunc bs=512 seek=1 count=100
+mkdir build
+nasm stage0.s -f bin -o build/stage0.bin
+cd stage1
+./run
+cd ..
+dd if=/dev/zero of=build/boot.iso bs=512 count=2880
+dd if=build/stage0.bin of=build/boot.iso conv=notrunc bs=512 count=1
+dd if=build/stage1.bin of=build/boot.iso conv=notrunc bs=512 seek=1 count=100

@@ -124,10 +124,26 @@ pe_start:
     ; Relocate the stack to a 14 MiB segment for plenty of RAM.
     mov esp, 0x00EFFFF0
 
-    mov esi, 0x7E00
-    add esi, 0x01B0
+    
+    ;mov edi, 0xA0000
+    ;mov byte [edi], 0x01
+    ;mov dx, 0xA000
+    ;mov fs, dx
+    ;mov di, 160
+    ;mov byte [fs:di], 0x01
+    ;mov byte [fs:di + 1], 0x01
+    ;mov byte [fs:di + 2], 0x01
+    ;mov byte [fs:di + 3], 0x01
+    ;mov di, 480
+    ;mov byte [fs:di], 0x01
+    ;mov byte [fs:di + 1], 0x01
+    ;mov byte [fs:di + 2], 0x01
+    ;mov byte [fs:di + 3], 0x01
+loop:
+    ;jmp loop
 
     ; Finally jump to rust
+    mov esi, 0x7E00
     jmp esi
 
 times 512 - 2 - ($ - $$) db 0

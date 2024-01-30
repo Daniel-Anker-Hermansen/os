@@ -2,30 +2,40 @@
 #![no_main]
 #![allow(named_asm_labels)]
 
-#[cfg(not(test))]
-use core::panic::PanicInfo;
-
-use alloc::string::ToString;
-
-#[cfg(not(test))]
-#[panic_handler]
-fn panic_handler(_: &PanicInfo) -> ! {
-    loop { }
-}
-
+use alloc::vec::Vec;
 
 extern crate alloc;
 
 mod allocator;
 mod video;
+mod panic;
+
+fn rdrand32() -> u32 {
+    5
+}
+
+fn sti() { 
+    unsafe {
+        core::arch::asm!("sti");
+    }
+}
 
 #[link_section = ".entry"]
 #[no_mangle]
 pub extern fn _start() {
-    video::draw_pixel(0, 0, 4);
-    let s = 123u8.to_string();
-    for (i, ch) in s.chars().enumerate() {
-        video::draw_char(i, ch);
+    // sti();
+    let mut v = Vec::new();
+    for _ in 0..20 {
+        v.push(rdrand32() % 10);
+        unsafe {
+            core::arch::asm!(
+                "nop",
+                in("eax") &v,
+            );
+        }
+    }
+    for (i, ch) in v.iter().cloned().enumerate() {
+        video::draw_char(i, (ch as u8 + 48) as char);
     }
     loop { }
 }
@@ -40,3 +50,10 @@ pub extern fn memcpy(dest: *mut u8, src: *const u8, n: usize) -> *mut u8 {
     dest
 }
 
+#[no_mangle]
+extern fn memset(dest: *mut u8, content: u8, size: usize) -> *mut u8 {
+    for i in 0..size {
+        unsafe { dest.add(i).write(content) }
+    }
+    dest
+}

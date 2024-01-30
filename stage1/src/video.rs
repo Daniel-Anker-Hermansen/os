@@ -4,11 +4,12 @@ pub fn draw_pixel(x: usize, y: usize, color: u8) {
     }
 }
 
+#[inline(never)]
 pub fn draw_char(x: usize, a: char) {
-    let rx = 3 * x;
-    for x in rx..rx + 2 {
-        for y in 0..a as usize - 48 {
-            draw_pixel(x, y, 4); 
+    let rx = 10 * x;
+    for x in rx..rx + 5 {
+        for y in 0..(a as usize - 48) * 5 {
+            draw_pixel(x, y, 1); 
         }
     }
 }

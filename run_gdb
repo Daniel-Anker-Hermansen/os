@@ -1,0 +1,2 @@
+./iso
+qemu-system-x86_64 -drive format=raw,file=build/boot.iso -S -gdb tcp::9000 
