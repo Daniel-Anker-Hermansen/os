@@ -9,12 +9,13 @@ extern crate alloc;
 mod allocator;
 mod video;
 mod panic;
+//mod vec;
 
 fn rdrand32() -> u32 {
     5
 }
 
-fn sti() { 
+fn __sti() { 
     unsafe {
         core::arch::asm!("sti");
     }
@@ -34,7 +35,7 @@ pub extern fn _start() {
             );
         }
     }
-    for (i, ch) in v.iter().cloned().enumerate() {
+    for (i, ch) in (0..20).map(|i| &v[i]).cloned().enumerate() {
         video::draw_char(i, (ch as u8 + 48) as char);
     }
     loop { }

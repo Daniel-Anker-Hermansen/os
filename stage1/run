@@ -1,2 +1,2 @@
-cargo b -r --target i386-kernel.json -Z build-std=core,alloc
+RUSTFLAGS=-g cargo b -r --target i386-kernel.json -Z build-std=core,alloc
 objcopy target/i386-kernel/release/stage1 ../build/stage1.bin -O binary
