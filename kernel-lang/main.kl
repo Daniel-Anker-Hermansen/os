@@ -1,0 +1,10 @@
+intrinsic usize_to_ptr(ptr: usize) -> &u8;
+
+interupt keyboard() {
+    let address: usize = 0;
+    let magic: &u8 = usize_to_ptr(address);
+}
+
+fn _start() {
+
+}

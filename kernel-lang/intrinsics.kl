@@ -1,0 +1,5 @@
+/// Reads the from that pin using the 'in' instruction
+intrinsic in(pin: u8) -> u64;
+
+/// Writes to that pin using the 'out' instruction
+intrinsic out(pin: u8, value: u64);
