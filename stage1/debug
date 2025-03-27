@@ -1,2 +1,0 @@
-cargo b --target i386-kernel.json -Z build-std=core,alloc
-objcopy target/i386-kernel/debug/stage1 ../build/stage1.bin -O binary

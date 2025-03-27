@@ -63,49 +63,47 @@ _start:
 
     call a20wait1
     
-    ; GDT adress
-    mov si, 0x800
+    ; Set up paging tables
+    mov edi, 0x00
+    mov cr3, edi ; Pointer to the paging table
+    xor eax, eax
+    mov ecx, 2048 
+    rep stosd ; Zero four pages 
+    mov edi, cr3
 
-    ; NULL segment
-    mov dword [si], 0x00
-    mov dword [si + 4], 0x00
+    ; PGD
+    mov dword [edi + 0x0000], 0x00001003 ; PUD: 0x1000 + Superuser + Read + Write + Present
+    ; PUD
+    mov dword [edi + 0x1000], 0x00000083 ; Page: 0x00 + Superuser + Read + Write + Present + Page Size
 
-    ; Limit
-    mov word [si + 8  + 0], 0xFFFF
-    ; Base of 1st segment
-    mov word [si + 8 + 2], 0x00
-    mov byte [si + 8 + 4], 0x00
-    mov byte [si + 8 + 7], 0x00
-    ; Limit and flags
-    mov byte [si + 8 + 6], 0xCF
-    ; Access byte. Present, Not system, ReadWrite
-    mov byte [si + 8 + 5], 0x92
+    mov eax, cr4
+    or eax, 1 << 5
+    mov cr4, eax
 
-    ; Limit
-    mov word [si + 16 + 0], 0xFFFF
-    ; Base of 2nd segment
-    mov word [si + 16 + 2], 0x00
-    mov byte [si + 16 + 4], 0x00
-    mov byte [si + 16 + 7], 0x00
-    ; Limit and flags
-    mov byte [si + 16 + 6], 0xCF
-    ; Access byte. Present, Not system, ExecRead
-    mov byte [si + 16 + 5], 0x9A
-
-    ; Declare gdt
-    lgdt [gdt]
-
-    ; Switch to protected mode.
+    mov ecx, 0xC0000080
+    rdmsr
+    or eax, 1 << 8
+    wrmsr
     mov eax, cr0
-    or al, 1
+    or eax, 1 << 31 | 1 << 0 ; Protected + Paging (Long mode)
     mov cr0, eax
 
-    ; Jump to next sector.
-    jmp 0x10:pe_start
+    mov edi, 0x2000
+    mov dword [edi + 0], 0x00000000
+    mov dword [edi + 4], 0x00000000
+    mov dword [edi + 8], 0x00000000
+    mov dword [edi + 12], 0x00209B00
+    mov dword [edi + 16], 0x00000000
+    mov dword [edi + 20], 0x00409300
+
+    ; Load gdt
+    lgdt [gdt]
+
+    jmp 0x8:pe_start ; Jump to 64 bit code
 
 gdt:
     db word (8 * 3 - 1)
-    db dword 0x800
+    db qword 0x2000 
 
 a20wait1:
     in al, 0x64
@@ -119,32 +117,15 @@ a20wait2:
     jz a20wait2
     ret
 
-[bits 32]
+[bits 64]
 pe_start:
+    ; I think I should reload the data segment registers here.
     ; Relocate the stack to a 14 MiB segment for plenty of RAM.
-    mov esp, 0x00EFFFF0
-
-    
-    ;mov edi, 0xA0000
-    ;mov byte [edi], 0x01
-    ;mov dx, 0xA000
-    ;mov fs, dx
-    ;mov di, 160
-    ;mov byte [fs:di], 0x01
-    ;mov byte [fs:di + 1], 0x01
-    ;mov byte [fs:di + 2], 0x01
-    ;mov byte [fs:di + 3], 0x01
-    ;mov di, 480
-    ;mov byte [fs:di], 0x01
-    ;mov byte [fs:di + 1], 0x01
-    ;mov byte [fs:di + 2], 0x01
-    ;mov byte [fs:di + 3], 0x01
-loop:
-    ;jmp loop
+    mov rsp, 0x00EFFFF0
+    mov rax, 0x7E00
 
     ; Finally jump to rust
-    mov esi, 0x7E00
-    jmp esi
+    jmp rax
 
 times 512 - 2 - ($ - $$) db 0
 dw 0xAA55
