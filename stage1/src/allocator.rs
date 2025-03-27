@@ -9,8 +9,6 @@ unsafe impl Send for Allocator { }
 
 unsafe impl Sync for Allocator { }
 
-#[no_mangle]
-#[inline(never)]
 unsafe extern "C" fn real_alloc(size: usize) -> *mut u8 {
     let ret = PTR as *mut u8;
     PTR = PTR + size + 0x100;
