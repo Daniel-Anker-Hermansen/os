@@ -2,6 +2,26 @@ const EMPTY: [u8; 8] = [0; 8];
 
 const fn generate_char_bit_map() -> [[u8; 8]; 128] {
 	let mut char_bit_map = [EMPTY; 128];
+	char_bit_map[b'0' as usize] = [
+		0b01110,
+		0b11111,
+		0b11011,
+		0b11011,
+		0b11011,
+		0b11011,
+		0b11111,
+		0b01110,
+	];
+	char_bit_map[b'1' as usize] = [
+		0b01110,
+		0b11110,
+		0b11110,
+		0b00110,
+		0b00110,
+		0b00110,
+		0b11111,
+		0b11111,
+	];
 	char_bit_map[b'D' as usize] = [
 		0b11110,
 		0b11111,
