@@ -14,7 +14,7 @@ _start:
 	int 0x10
 	
 	; Read sectors from disk
-	; change this to be dynamically sized based
+    ; FIXME: change this to be dynamically sized based
 	; on binary size of stage1
 	xor ax, ax
 	mov ds, ax
@@ -68,7 +68,7 @@ _start:
 	mov cr3, edi ; Pointer to the paging table
 	xor eax, eax
 	mov ecx, 2048 
-	rep stosd ; Zero four pages 
+	rep stosd ; Zero two pages 
 	mov edi, cr3
 
 	; PGD

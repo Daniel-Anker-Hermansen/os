@@ -1,6 +1,6 @@
 use core::cell::SyncUnsafeCell;
 
-use crate::x86;
+use crate::pic;
 
 static TIME: SyncUnsafeCell<u128> = SyncUnsafeCell::new(0);
 
@@ -17,5 +17,5 @@ fn tick() {
 #[unsafe(no_mangle)]
 pub extern "C" fn pit_interupt_handler() {
 	tick();
-	x86::pic1_eoi();
+	pic::eoi1();
 }
