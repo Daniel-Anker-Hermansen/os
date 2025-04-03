@@ -38,6 +38,9 @@ pub extern "C" fn _start() -> ! {
 	unsafe {
 		x86::set_interupt(idt, 32, interupt::IRQ_32);
 	}
+	unsafe {
+		x86::set_interupt(idt, 33, interupt::IRQ_33);
+	}
 	x86::lidt(idt);
 	x86::sti();
 	loop {

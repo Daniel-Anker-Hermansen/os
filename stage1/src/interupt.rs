@@ -35,6 +35,7 @@ macro_rules! interupt {
 }
 
 interupt!(IRQ_32, __irq_32, pit_interupt_handler);
+interupt!(IRQ_33, __irq_33, keyboard_input);
 interupt!(IRQ_DEFAULT, __irq_default, default_handler);
 
 #[unsafe(no_mangle)]
